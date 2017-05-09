@@ -34,6 +34,14 @@ function userService($http, API, auth) {
       })
   }
 
+  // Login service
+  self.login = function(username, password) {
+    return $http.post(API + '/auth/login', {
+        username: username,
+        password: password
+      })
+  }
+
 }
 
 // We won't touch anything in here
