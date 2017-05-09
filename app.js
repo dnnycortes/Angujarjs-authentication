@@ -14,6 +14,8 @@ function authInterceptor(API, auth) {
   }
 }
 
+///////////
+
 function authService($window) {
   var self = this;
 
@@ -53,7 +55,14 @@ function authService($window) {
     }
   }
   console.log("am I authed?", self.isAuthed());
+
+  // Logout service
+  self.logout = function() {
+    $window.localStorage.removeItem('jwtToken');
+  }
 }
+
+///////////
 
 function userService($http, API, auth) {
   var self = this;
@@ -80,8 +89,9 @@ function userService($http, API, auth) {
         return res
       })
   }
-
 }
+
+///////////
 
 // We won't touch anything in here
 function MainCtrl(user, auth) {

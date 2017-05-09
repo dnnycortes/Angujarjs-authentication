@@ -12,7 +12,7 @@
         <br>
 
         <button ng-click="main.register()">Register</button>
-        <button ng-click="main.login()">Login</button>
+        <button ng-click="main.login()" ng-hide="main.isAuthed()">Login</button>
         <button ng-click="main.logout()" ng-show="main.isAuthed()">Logout</button>
 
         <button ng-click="main.getQuote()">get quote</button>
