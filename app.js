@@ -17,7 +17,42 @@ function authInterceptor(API, auth) {
 function authService($window) {
   var self = this;
 
-  // Add JWT methods here
+  // Parsing JWT
+
+  self.parseJwt = function(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace('-', '+').replace('_', '/'); // Will able to decode properly
+    return JSON.parse($window.atob(base64));
+  }
+
+  console.log(self.parseJwt('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImRhbnkiLCJpZCI6MCwiZXhwIjoxNDk0NDQwNDc3LCJpYXQiOjE0OTQzNTQwNzd9.mTuWbB9zya0AW7zw8UJaFcLvA7SPXfnkrq1gA2poRHk'));
+
+  // Save token to localstorage
+  self.saveToken = function(token) {
+    $window.localStorage['jwtToken'] = token;
+  }
+
+  // Retrieve token from localstorage
+  self.getToken = function() {
+    return $window.localStorage['jwtToken'];
+  }
+
+  console.log("Token cargado: " + self.getToken());
+
+  // Is the user auth?
+  self.isAuthed = function(){
+    // retrieve the token from local storage
+    var token = self.getToken();
+    if(token){
+      var params = self.parseJwt(token);
+
+      //
+      return Math.round(new Date().getTime() / 1000) <= params.exp;
+    } else {
+      return false;
+    }
+  }
+  console.log("am I authed?", self.isAuthed());
 }
 
 function userService($http, API, auth) {
@@ -39,6 +74,10 @@ function userService($http, API, auth) {
     return $http.post(API + '/auth/login', {
         username: username,
         password: password
+      }).then(function(res){
+        auth.saveToken(res.data.token)
+
+        return res
       })
   }
 
