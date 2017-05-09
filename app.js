@@ -1,5 +1,5 @@
 ;(function(){
-  
+
 function authInterceptor(API, auth) {
   return {
     // automatically attach Authorization header
@@ -26,7 +26,13 @@ function userService($http, API, auth) {
     return $http.get(API + '/auth/quote')
   }
 
-  // add authentication methods here
+  // Register service
+  self.register = function(username, password) {
+    return $http.post(API + '/auth/register', {
+        username: username,
+        password: password
+      })
+  }
 
 }
 
